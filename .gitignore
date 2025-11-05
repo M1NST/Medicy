@@ -1,0 +1,17 @@
+# 1. Dependencies และ Build Artifacts
+*.dll
+*.exe
+*.log
+# ถ้าเป็น Kotlin/Java/Gradle มักจะมีโฟลเดอร์พวกนี้
+/build/
+/out/
+.gradle/
+
+# 2. ไฟล์ Cache และ Lock
+*.lock
+# ไฟล์ชั่วคราวของ IDE (VS Code)
+.vscode/
+
+# 3. โฟลเดอร์เฉพาะจากภาพ
+# คุณสามารถระบุ path เต็มของโฟลเดอร์ที่ไม่ต้องการได้
+/docker/bin/
