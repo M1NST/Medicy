@@ -1,17 +1,24 @@
-# backend/app/main.py
-
 from fastapi import FastAPI
-from app.db.session import Base, engine 
-# ต้องมีตัวแปร router ที่ถูก export จาก user_router.py
-from app.routers.user_router import router as user_router_instance 
+from app.db.session import Base, engine
+from app.routers import (
+    user_router, medicine_router, reminder_router, chat_router,
+    notification_router, user_medications_router
+)
 
-app = FastAPI(title="Medicy API (Connected to MySQL)")
+app = FastAPI(title="Medicy API (MySQL Connected)")
 
-# สร้างตารางเมื่อเริ่มต้น
-Base.metadata.create_all(bind=engine) 
+# ✅ สร้างตารางถ้ายังไม่มี
+Base.metadata.create_all(bind=engine)
 
-app.include_router(user_router_instance, prefix="/api/users", tags=["Users"])
+# ✅ Include routers
+app.include_router(user_router, prefix="/api/users", tags=["Users"])
+app.include_router(medicine_router, prefix="/api/medicines", tags=["Medicines"])
+app.include_router(reminder_router, prefix="/api/reminders", tags=["Reminders"])
+app.include_router(chat_router, prefix="/api/chats", tags=["Chats"])
+app.include_router(notification_router, prefix="/api/notifications", tags=["Notifications"])
+app.include_router(user_medications_router, prefix="/api/user_medications", tags=["User Medications"])  
+
 
 @app.get("/")
 def root():
-    return {"message": "Medicy backend connected to MySQL successfully!"}
+    return {"message": "Medicy backend connected to MySQL successfully 🚀"}

@@ -1,48 +1,23 @@
-# app/routers/user_router.py
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.db.session import SessionLocal
+from typing import List
+from app.db.session import get_db
 from app.models.users import User
-from pydantic import BaseModel
-from typing import List, Optional  # ✅ ใช้ Optional แทน |
- 
+from app.schemas.user_schema import UserCreate, UserOut
+
 router = APIRouter()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-# schema สำหรับรับข้อมูล
-class UserCreate(BaseModel):
-    username: str
-    email: str
-    phone: Optional[str] = None  # ✅ ใช้ Optional
-    password_hash: str
-
-class UserOut(BaseModel):
-    user_id: int
-    username: str
-    email: str
-    phone: Optional[str] = None
-    class Config:
-        orm_mode = True
+@router.get("/", response_model=List[UserOut])
+def get_users(db: Session = Depends(get_db)):
+    return db.query(User).all()
 
 @router.post("/", response_model=UserOut)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    new_user = User(
-        username=user.username,
-        email=user.email,
-        phone=user.phone,
-        password_hash=user.password_hash
-    )
+    new_user = User(**user.dict())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
 
-@router.get("/", response_model=List[UserOut])
-def get_users(db: Session = Depends(get_db)):
-    return db.query(User).all()
+# Ensure router is exported
+__all__ = ['router']

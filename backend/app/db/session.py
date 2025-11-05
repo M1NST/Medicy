@@ -1,17 +1,18 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
-import os
-from dotenv import load_dotenv
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-load_dotenv()
+# 💾 เชื่อมต่อ MySQL (ปรับ user, password, host, db ให้ตรงของคุณ)
+DATABASE_URL = "mysql+pymysql://root:root@localhost:3306/medicy_db"
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-# สร้าง engine สำหรับเชื่อมต่อ MySQL
-engine = create_engine(DATABASE_URL, echo=True)
-
-# Session ใช้สำหรับ query และ commit ข้อมูล
+engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base สำหรับ model ทุกตัว
 Base = declarative_base()
+
+# Dependency สำหรับ FastAPI
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
