@@ -4,8 +4,9 @@ from app.routers import (
     user_router, medicine_router, reminder_router, chat_router,
     notification_router, user_medications_router
 )
+from app.models import *
 
-app = FastAPI(title="Medicy API (MySQL Connected)")
+app = FastAPI(title="Medicy Backend API")
 
 # ✅ สร้างตารางถ้ายังไม่มี
 Base.metadata.create_all(bind=engine)

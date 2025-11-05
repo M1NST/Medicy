@@ -4,6 +4,7 @@ from app.db.session import Base
 
 class UserMedications(Base):
     __tablename__ = "user_medications"
+
     usermed_id = Column(Integer, primary_key=True, autoincrement=True)
     user_id = Column(Integer, ForeignKey("user.user_id"))
     med_id = Column(Integer, ForeignKey("medicine.med_id"))
@@ -12,5 +13,6 @@ class UserMedications(Base):
     start_date = Column(Date)
     end_date = Column(Date)
 
-    user = relationship("User", lazy="joined")
-    medicine = relationship("Medicine", lazy="joined")
+    user = relationship("User", back_populates="user_meds")
+    medicine = relationship("Medicine", back_populates="user_meds")
+    reminder_logs = relationship("ReminderLog", back_populates="user_medication")
