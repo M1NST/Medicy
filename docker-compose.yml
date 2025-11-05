@@ -5,7 +5,7 @@ services:
     container_name: medicy_db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: medicy_db
     ports:
       - "3306:3306"
