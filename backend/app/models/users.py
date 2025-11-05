@@ -10,7 +10,7 @@ class User(Base):
     first_name = Column(String(100))
     last_name = Column(String(100))
     email = Column(String(100))
-    phone_num = Column(String(20))
+    phone_num = Column(String(10))
     username = Column(String(50))
     password_hash = Column(String(255))
 
