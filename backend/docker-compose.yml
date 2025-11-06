@@ -1,0 +1,25 @@
+services:
+  medicy_backend:
+    build:
+      context: C:/Users/ASUS/Desktop/Medicy/backend
+      dockerfile: C:/Users/ASUS/Desktop/Medicy/backend/Dockerfile
+    container_name: medicy_backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - medicy_db
+    environment:
+      - DB_HOST=medicy_db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=medicy
+
+  medicy_db:
+    image: mysql:8.0
+    container_name: medicy_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: medicy
+    ports:
+      - "3307:3306"
