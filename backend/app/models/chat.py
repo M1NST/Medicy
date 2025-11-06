@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, Boolean # <-- 1. เพิ่ม Text, Boolean
 from datetime import datetime
 from sqlalchemy.orm import relationship
 from app.db.session import Base
@@ -9,8 +9,9 @@ class Chat(Base):
     chat_id = Column(Integer, primary_key=True, autoincrement=True)
     sender_id = Column(Integer, ForeignKey("user.user_id"))
     receiver_id = Column(Integer, ForeignKey("user.user_id"))
-    message = Column(String(255))
-    created_at = Column(DateTime, default=datetime.utcnow)
+    message = Column(Text, nullable=False) # <-- 1. เปลี่ยนเป็น Text
+    sent_at = Column(DateTime, default=datetime.utcnow) # <-- 2. เปลี่ยนชื่อจาก created_at
+    is_read = Column(Boolean, default=False) # <-- 3. เพิ่ม is_read
 
     sender = relationship("User", foreign_keys=[sender_id], back_populates="chats_sent")
     receiver = relationship("User", foreign_keys=[receiver_id], back_populates="chats_received")

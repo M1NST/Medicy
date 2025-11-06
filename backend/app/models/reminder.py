@@ -7,15 +7,17 @@ class Reminder(Base):
     __tablename__ = "reminder"
 
     rem_id = Column(Integer, primary_key=True, autoincrement=True)
-    usermed_id = Column(Integer, ForeignKey("user_medications.usermed_id"))
+    # 1. ลบ usermed_id จากตรงนี้
     reminder_time = Column(DateTime, nullable=False)
-    status = Column(String(50), default="Pending")
+    # 2. ลบ status ที่เป็น String ออก
     create_time = Column(DateTime, default=datetime.utcnow)
 
     logs = relationship("ReminderLog", back_populates="reminder")
-    status_id = Column(Integer, ForeignKey("status.status_code"))
-    status_details = relationship("Status", back_populates="reminders_from_reminder")
-    user_medication = relationship("UserMedication", back_populates="reminders")
+    
+    # 3. เปลี่ยนชื่อ status_id เป็น status_code
+    status_code = Column(Integer, ForeignKey("status.status_code"))
+    status_details = relationship("Status", back_populates="reminders")
+    # 1. ลบ user_medication relationship จากตรงนี้
 
 class ReminderLog(Base):
     __tablename__ = "reminder_logs"
@@ -24,4 +26,7 @@ class ReminderLog(Base):
     rem_id = Column(Integer, ForeignKey("reminder.rem_id"))
     responded_at = Column(DateTime)
     reminder = relationship("Reminder", back_populates="logs")
-    
+
+    # vvvvv 4. เพิ่มฟิลด์และ Relationship ตาม SQL ใหม่ vvvvv
+    usermed_id = Column(Integer, ForeignKey("user_medications.usermed_id"), nullable=False)
+    user_medication = relationship("UserMedication", back_populates="reminder_logs")

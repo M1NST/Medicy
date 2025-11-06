@@ -17,7 +17,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=mysql+pymysql://root:password@db:3306/medicy_db
+      - DATABASE_URL=mysql+pymysql://root:root@db:3306/medicy_db
     depends_on:
       - db
 volumes:

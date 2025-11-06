@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import datetime
+from datetime import datetime, date  # <-- 1. เพิ่ม date
 from typing import Optional
 
 
@@ -7,8 +7,9 @@ class UserMedicationCreate(BaseModel):
     user_id: int
     med_id: int
     dosage: str
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
+    schedule: Optional[str] = None      # <-- 3. เพิ่ม schedule
+    start_date: Optional[date] = None   # <-- 2. เปลี่ยนเป็น date
+    end_date: Optional[date] = None     # <-- 2. เปลี่ยนเป็น date
 
 
 class UserMedicationOut(BaseModel):
@@ -16,8 +17,9 @@ class UserMedicationOut(BaseModel):
     user_id: int
     med_id: int
     dosage: str
-    start_date: Optional[datetime]
-    end_date: Optional[datetime]
+    schedule: Optional[str]               # <-- 3. เพิ่ม schedule
+    start_date: Optional[date]            # <-- 2. เปลี่ยนเป็น date
+    end_date: Optional[date]              # <-- 2. เปลี่ยนเป็น date
     created_at: datetime
 
     class Config:

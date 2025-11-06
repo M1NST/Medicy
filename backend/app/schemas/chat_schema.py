@@ -14,7 +14,8 @@ class ChatOut(BaseModel):
     sender_id: int
     receiver_id: int
     message: str
-    created_at: Optional[datetime] = None
+    sent_at: Optional[datetime] = None  # <-- 1. เปลี่ยนชื่อจาก created_at
+    is_read: bool = False             # <-- 2. เพิ่ม is_read
 
     class Config:
         from_attributes = True
