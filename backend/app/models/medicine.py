@@ -4,9 +4,7 @@ from app.db.session import Base
 
 class Medicine(Base):
     __tablename__ = "medicine"
-
     med_id = Column(Integer, primary_key=True, autoincrement=True)
-    med_name = Column(String(100), nullable=False)
+    med_name = Column(String(100), unique=True)
     description = Column(Text)
-
-    user_meds = relationship("UserMedications", back_populates="medicine")
+    user_meds = relationship("UserMedication", back_populates="medicine")

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, func
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.db.session import Base
 
@@ -11,11 +11,11 @@ class User(Base):
     last_name = Column(String(100))
     email = Column(String(100))
     phone_num = Column(String(10))
-    username = Column(String(50))
+    username = Column(String(50), unique=True)
     password_hash = Column(String(255))
 
     role = relationship("Role", back_populates="users")
     notifications = relationship("Notification", back_populates="user")
     chats_sent = relationship("Chat", foreign_keys="[Chat.sender_id]", back_populates="sender")
     chats_received = relationship("Chat", foreign_keys="[Chat.receiver_id]", back_populates="receiver")
-    user_meds = relationship("UserMedications", back_populates="user")
+    user_meds = relationship("UserMedication", back_populates="user")

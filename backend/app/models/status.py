@@ -8,4 +8,4 @@ class Status(Base):
     status_code = Column(Integer, primary_key=True, autoincrement=True)
     status_name = Column(String(50), nullable=False)
 
-    reminders = relationship("Reminder", back_populates="status")
+    reminders = relationship("Reminder", back_populates="status_details")
