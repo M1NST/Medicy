@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
 from app.db.session import Base
+from datetime import datetime
 
 class User(Base):
     __tablename__ = "user"
@@ -15,7 +16,7 @@ class User(Base):
     password_hash = Column(String(255))
 
     role = relationship("Role", back_populates="users")
-    notifications = relationship("Notification", back_populates="user")
+    notifications = relationship("Notification", back_populates="user")  # ✅ แก้ตรงนี้
     chats_sent = relationship("Chat", foreign_keys="[Chat.sender_id]", back_populates="sender")
     chats_received = relationship("Chat", foreign_keys="[Chat.receiver_id]", back_populates="receiver")
     user_meds = relationship("UserMedication", back_populates="user")

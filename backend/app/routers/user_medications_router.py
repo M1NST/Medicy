@@ -1,32 +1,30 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
 from app.db.session import get_db
 from app.models.user_medications import UserMedication
 from app.schemas.user_medication_schema import UserMedicationCreate, UserMedicationOut
 
-router = APIRouter()
+router = APIRouter(tags=["User Medications"])
 
-@router.get("/", response_model=List[UserMedicationOut])
-def get_user_meds(user_id: int | None = None, db: Session = Depends(get_db)):
-    q = db.query(UserMedication)
-    if user_id:
-        q = q.filter(UserMedication.user_id == user_id)
-    return q.all()
+# ✅ ดึงข้อมูลยาของผู้ใช้ตาม user_id
+@router.get("/user/{user_id}", response_model=list[UserMedicationOut])
+def get_user_medications(user_id: int, db: Session = Depends(get_db)):
+    meds = db.query(UserMedication).filter(UserMedication.user_id == user_id).all()
+    if not meds:
+        raise HTTPException(status_code=404, detail="No medications found for this user")
+    return meds
 
+# ✅ ดึงทั้งหมด (สำหรับ debug หรือ admin)
+@router.get("/", response_model=list[UserMedicationOut])
+def get_all_user_medications(db: Session = Depends(get_db)):
+    return db.query(UserMedication).all()
+
+# ✅ เพิ่มข้อมูล user medication
 @router.post("/", response_model=UserMedicationOut)
-def create_user_med(med: UserMedicationCreate, db: Session = Depends(get_db)):
-    new_item = UserMedication(**med.dict())
-    db.add(new_item)
+def create_user_medication(payload: UserMedicationCreate, db: Session = Depends(get_db)):
+    user_id = payload.user_id if payload.user_id else 4
+    new_med = UserMedication(**payload.dict())
+    db.add(new_med)
     db.commit()
-    db.refresh(new_item)
-    return new_item
-
-@router.delete("/{usermed_id}")
-def delete_user_med(usermed_id: int, db: Session = Depends(get_db)):
-    med = db.query(UserMedication).get(usermed_id)
-    if not med:
-        raise HTTPException(status_code=404, detail="Not found")
-    db.delete(med)
-    db.commit()
-    return {"deleted": True}
+    db.refresh(new_med)
+    return new_med

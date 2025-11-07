@@ -1,19 +1,33 @@
-from pydantic import BaseModel
-from datetime import date, time
+from pydantic import BaseModel, field_validator
+from datetime import date, datetime
+from typing import Optional
 
 class UserMedicationBase(BaseModel):
-    user_id: int
     med_name: str
     dosage: str
-    when_to_take: str
-    start_date: date
-    end_date: date
-    time_of_day: time
+    startDate: date
+    endDate: date
+    user_id: Optional[int] = 4
+    when: Optional[str] = None
+    details: Optional[str] = None
 
+    @field_validator("startDate", "endDate", mode='before')
+    def parse_date(cls, value):
+        if isinstance(value, str):
+            try:
+                return datetime.strptime(value, "%d/%m/%Y").date()
+            except ValueError:
+                raise ValueError("Date must be in format DD/MM/YYYY")
+        return value
+
+# ✅ สำหรับการสร้างข้อมูลใหม่ (POST)
 class UserMedicationCreate(UserMedicationBase):
     pass
 
+
+# ✅ สำหรับการแสดงผล (response)
 class UserMedicationOut(UserMedicationBase):
     usermed_id: int
+
     class Config:
-        from_attributes = True
+        orm_mode = True

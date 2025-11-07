@@ -7,7 +7,6 @@ reduces the chance of referencing a class name before it's defined.
 
 from . import role
 from . import users
-from . import medicine
 from . import user_medications
 from . import status
 from . import reminder
