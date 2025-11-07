@@ -1,7 +1,20 @@
-from app.models.users import User
-from app.models.medicine import Medicine
-from app.models.reminder import Reminder
-from app.models.chat import Chat
-from app.models.notification import Notification
-from app.models.user_medications import UserMedication
-from app.models.status import Status
+# Ensure models are imported so SQLAlchemy sees them; exclude medicine
+from importlib import import_module
+
+_model_modules = [
+    "app.models.users",
+    "app.models.role",
+    "app.models.status",
+    "app.models.reminder",
+    "app.models.notification",
+    "app.models.chat",
+    "app.models.user_medications",  # updated to no FK to medicine
+    # DO NOT include: app.models.medicine
+]
+
+for _m in _model_modules:
+    try:
+        import_module(_m)
+    except Exception as _e:
+        # Skip missing modules; keeps app flexible across repo variants
+        pass

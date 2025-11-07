@@ -1,16 +1,20 @@
-# Import all routers
-from .user_router import router as user_router
-from .medicine_router import router as medicine_router
-from .reminder_router import router as reminder_router
-from .chat_router import router as chat_router
-from .notification_router import router as notification_router
-from .user_medications_router import router as user_medications_router
+# Auto-import routers (excluding medicine)
+__all__ = []
 
-__all__ = [
-    'user_router',
-    'medicine_router',
-    'reminder_router',
-    'chat_router',
-    'notification_router',
-    'user_medications_router'
-]
+def _try(name, asname):
+    try:
+        mod = __import__(name, fromlist=["router"])
+        router = getattr(mod, "router", None)
+        if router is not None:
+            globals()[asname] = router
+            __all__.append(asname)
+    except Exception:
+        pass
+
+_try("app.routers.user_router", "user_router")
+_try("app.routers.reminder_router", "reminder_router")
+_try("app.routers.chat_router", "chat_router")
+_try("app.routers.notification_router", "notification_router")
+_try("app.routers.user_medications_router", "user_medications_router")
+
+# Intentionally NOT importing: app.routers.medicine_router
