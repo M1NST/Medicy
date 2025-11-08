@@ -14,4 +14,4 @@ class UserOut(BaseModel):
     role_code: int
     phone_num: str | None = None
     class Config:
-        orm_mode = True
+        from_attributes = True
