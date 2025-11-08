@@ -5,14 +5,13 @@ from datetime import datetime
 
 class User(Base):
     __tablename__ = "user"
-
     user_id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(100), unique=True, nullable=False)
     role_code = Column(Integer, ForeignKey("role.role_code"), default=1)
+    phone_num = Column(String(10))
     first_name = Column(String(100))
     last_name = Column(String(100))
     email = Column(String(100))
-    phone_num = Column(String(10))
-    username = Column(String(50), unique=True)
     password_hash = Column(String(255))
 
     role = relationship("Role", back_populates="users")

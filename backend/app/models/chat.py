@@ -11,7 +11,6 @@ class Chat(Base):
     receiver_id = Column(Integer, ForeignKey("user.user_id"))
     message = Column(Text, nullable=False) # <-- 1. เปลี่ยนเป็น Text
     sent_at = Column(DateTime, default=datetime.utcnow) # <-- 2. เปลี่ยนชื่อจาก created_at
-    is_read = Column(Boolean, default=False) # <-- 3. เพิ่ม is_read
 
     sender = relationship("User", foreign_keys=[sender_id], back_populates="chats_sent")
     receiver = relationship("User", foreign_keys=[receiver_id], back_populates="chats_received")
